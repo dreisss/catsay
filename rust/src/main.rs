@@ -1,38 +1,68 @@
-fn split_lines(text: String) -> (Vec<String>, usize) {
+use std::{env::{args, Args}, io::{Stdin, stdin, Read}};
+
+fn split_lines_args(args: &mut Args) -> (Vec<String>, usize) {
+  let mut text_vector: Vec<String> = args.collect();
+  text_vector.remove(0);
+  let text: String = text_vector.join(" ");
+
   // auxiliar variables
-  let mut line: String = String::from("");
-  let mut lines: Vec<String> = vec![];
-  let mut character_count: usize = 0;
+  let mut temp_line: String = String::new();
+  let mut temp_lines: Vec<String> = Vec::new();
+  let mut temp_count: usize = 0;
 
   // output variables
   let mut max_size: usize = 0;
-  let mut lines_output: Vec<String> = vec![];
+  let mut lines: Vec<String> = Vec::new();
 
   // split text in lines and generate the max length
   for (i, character) in text.chars().enumerate() {
-    if ((character_count >= 40) && (character == ' ')) || i == text.len() - 1 {
-      if character != ' ' { line.push(character) }
-      lines.push(line.clone());
-      line.clear();
+    if ((temp_count >= 40) && (character == ' ')) || i == text.len() - 1 {
+      if character != ' ' { temp_line.push(character) }
+      temp_lines.push(temp_line.clone());
+      temp_line.clear();
 
-      max_size = if character_count + 1 > max_size { character_count + 1 } else { max_size };
-      character_count = 0;
+      max_size = if temp_count + 1 > max_size { temp_count + 1 } else { max_size };
+      temp_count = 0;
       continue;
     }
 
-    line.push(character);
-    character_count += 1;
+    temp_line.push(character);
+    temp_count += 1;
   }
 
   // grant lines has max_size length
-  for mut line in lines {
+  for mut line in temp_lines {
     while line.len() < max_size {
       line.push(' ');
     }
-    lines_output.push(line);
+    lines.push(line);
   }
 
-  return (lines_output, max_size);
+  return (lines, max_size);
+}
+
+fn split_lines_pipe(pipe: &mut Stdin) -> (Vec<String>, usize) {
+  let mut text: String = String::new();
+  let _result = pipe.read_to_string(&mut text);
+
+  let mut temp_lines: Vec<String> = Vec::new();
+
+  let mut lines: Vec<String> = Vec::new();
+  let mut max_size: usize = 0;
+
+  for line in text.lines() {
+    temp_lines.push(String::from(line.replace('\t', " ")));
+    max_size = if line.len() > max_size { line.len() } else { max_size };
+  }
+
+  for mut line in temp_lines {
+    while line.len() < max_size {
+      line.push(' ');
+    }
+    lines.push(line);
+  }
+
+  return (lines, max_size);
 }
 
 fn print_cat(lines: Vec<String>, max_size: usize) {
@@ -49,13 +79,18 @@ fn print_cat(lines: Vec<String>, max_size: usize) {
 }
 
 fn main() {
-  // Receive command text
-  let mut input_array: Vec<String> = std::env::args().collect();
-  input_array.remove(0);
+  // Define util variable
+  let mut lines: (Vec<String>, usize);
 
-  // split and format text in lines
-  let input_text: String = input_array.join(" ");
-  let lines: (Vec<String>, usize) = split_lines(input_text);
+  // Receive command text when args
+  let mut input_args: Args = args();
+  lines = split_lines_args(&mut input_args);
+
+  // Receive command form pipe and use if there's no other input
+  let mut input_pipe: Stdin = stdin();
+  if lines.0.is_empty() {
+    lines = split_lines_pipe(&mut input_pipe);
+  }
 
   // Print output
   print_cat(lines.0, lines.1);
