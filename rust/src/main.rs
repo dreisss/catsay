@@ -1,20 +1,22 @@
 pub mod modules;
+
 use modules::{
-  input::get_input,
+  input::{Input, get_input},
   cmds::get_commands,
   utils::format_input
 };
 
 fn main() {
-  let (input, input_type): (Vec<String>, &str) = get_input();
-  if get_commands(input.clone(), input_type) {
+  let input: Input = get_input();
+  if get_commands(input.clone()) {
     return
   }
 
-  let result: Vec<String> = format_input(input, input_type);
+  let result: Vec<String> = format_input(input);
   print(result);
 }
 
+// Print the lines formatted.
 fn print(lines: Vec<String>) {
   if lines.is_empty() {
     return
@@ -31,4 +33,4 @@ fn print(lines: Vec<String>) {
   （ﾟ､ ｡ ７
   |、ﾞ ~ヽ
   じし f\_, )ノ"#);
-} // Print text formatted and the cat
+}
