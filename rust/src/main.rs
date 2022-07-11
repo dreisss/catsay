@@ -20,7 +20,7 @@ fn print(lines: Vec<String>) {
     return
   }
 
-  let length: usize = [0].len();
+  let length: usize = lines[0].len();
   println!("          _-{}-_", "-".repeat(length));
   for line in lines {
     print!("         |  {}  |\n", line);
