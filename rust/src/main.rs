@@ -1,25 +1,24 @@
 pub mod modules;
 
-use modules::{
-  input::{Input, get_input},
-  cmds::get_commands,
-  utils::format_input
-};
+use modules::{cmds::Command, input::Input};
 
 fn main() {
-  let input: Input = get_input();
-  if get_commands(input.clone()) {
-    return
+  let input: Input = Input::get();
+  let command: Command = Command::get(input.clone());
+  command.clone().run();
+
+  if command.clone()._break_execution {
+    return;
   }
 
-  let result: Vec<String> = format_input(input);
+  let result: Vec<String> = input.format();
   print(result);
 }
 
 // Print the lines formatted.
 fn print(lines: Vec<String>) {
   if lines.is_empty() {
-    return
+    return;
   }
 
   let length: usize = lines[0].len();
@@ -28,9 +27,11 @@ fn print(lines: Vec<String>) {
     print!("         |  {}  |\n", line);
   }
   println!("        / ¯-{}-¯", "-".repeat(length));
-  println!(r#"       /
+  println!(
+    r#"       /
    ／l、
   （ﾟ､ ｡ ７
   |、ﾞ ~ヽ
-  じし f\_, )ノ"#);
+  じし f\_, )ノ"#
+  );
 }
