@@ -35,7 +35,7 @@ impl Input<'static> {
     let (mut value_, mut type_): (Vec<String>, &str) = (Self::get_args(), "args");
 
     if value_.is_empty() {
-      (value_, type_) = (Self::get_stdin(), "pipe");
+      (value_, type_) = (Self::get_stdin(), "stdin");
     }
 
     Self { value_, type_ }

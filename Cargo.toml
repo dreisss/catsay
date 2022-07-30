@@ -1,10 +1,10 @@
 [package]
 name = "catsay"
-version = "0.1.4"
+version = "1.0.0"
 authors = ["Davi Reis <reis.davi11010@gmail.com>"]
 license = "MIT OR Apache-2.0"
 description = "A simple cowsay with a cat!"
-readme = "https://github.com/dreisss/catsay/blob/main/README.md"
+readme = "./README.md"
 homepage = "https://github.com/dreisss/catsay"
 repository = "https://github.com/dreisss/catsay"
 keywords = ["cli", "cowsay", "catsay"]
